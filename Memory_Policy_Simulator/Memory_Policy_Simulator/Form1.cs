@@ -148,6 +148,21 @@ namespace Memory_Policy_Simulator
                     gridBaseY + gridSize / 4));
         }
 
+        private char GetPolicy() //comboBox에서 정책을 가져오는 메소드
+        {
+            switch (this.comboBox1.SelectedItem.ToString())
+            {
+                case "FIFO":
+                    return 'F';
+                case "LRU":
+                    return 'L';
+                case "Clock":
+                    return 'C';
+                default:
+                    return 'F';
+            }
+        }
+
         private void btnOperate_Click(object sender, EventArgs e)
         {
             this.tbConsole.Clear();
@@ -158,7 +173,8 @@ namespace Memory_Policy_Simulator
                 int windowSize = int.Parse(this.tbWindowSize.Text);
 
                 /* initalize */
-                var window = new Core(windowSize);
+                char memoryPolicy = GetPolicy();
+                var window = new Core(windowSize, memoryPolicy);
 
                 foreach ( char element in data )
                 {

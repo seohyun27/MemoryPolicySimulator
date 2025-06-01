@@ -10,19 +10,21 @@ namespace Memory_Policy_Simulator
 
     public struct Page
     {
-        public static int CREATE_ID = 0;
+        //각 페이지에 고유한 ID를 부여하기 위한 정적 변수
+        //페이지가 생성될 때마다 증가
+        public static int CREATE_ID = 0; 
 
-        public enum STATUS
+        public enum STATUS //페이지의 상태
         {
-            HIT,
-            PAGEFAULT,
-            MIGRATION
+            HIT, //히트 (페이지가 이미 메모리에 존재)
+            PAGEFAULT, //폴트 (페이지가 메모리에 존재하지 않음)
+            MIGRATION //메모리에서 다른 페이지로 교체
         }
 
-        public int pid;
-        public int loc;
-        public char data;
-        public STATUS status;
+        public int pid; //페이지 아이디
+        public int loc; //메모리 내부에서의 페이지 위치
+        public char data; //페이지에 저장된 데이터
+        public STATUS status; //페이지의 현재 상태
     }
 
 }
