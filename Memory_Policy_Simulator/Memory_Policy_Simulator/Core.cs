@@ -33,8 +33,8 @@ namespace Memory_Policy_Simulator
 
         public Page.STATUS Operate(char data)
         {
-            Page newPage;
-            
+            Page newPage = new Page();
+
             //만약 메모리에 페이지가 있다면 -> 페이지 히트
             if (this.frame_window.Any<Page>(x => x.data == data))
             {
@@ -64,11 +64,11 @@ namespace Memory_Policy_Simulator
                     {
                         this.frame_window.Dequeue(); // 가장 먼저 들어온 페이지 제거
                     }
-                    else if (memoryPolicy == 'L') // LRU 정책 (추후 바뀔 수 있음)
+                    else if (memoryPolicy == 'C') // Clock
                     {
                         // 예시1
                     }
-                    else if (memoryPolicy == 'C') // Clock 정책 (추후 바뀔 수 있음)
+                    else if (memoryPolicy == 'L') // LFU 정책 (추후 바뀔 수 있음)
                     {
                         // 예시2
                     }

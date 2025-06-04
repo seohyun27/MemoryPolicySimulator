@@ -36,8 +36,8 @@ namespace Memory_Policy_Simulator
             this.comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboBox1.Items.Clear(); // 기존 항목 초기화
             this.comboBox1.Items.Add("FIFO");
-            this.comboBox1.Items.Add("LRU");
             this.comboBox1.Items.Add("Clock");
+            this.comboBox1.Items.Add("LFU");
             this.comboBox1.SelectedIndex = 0; // 기본값 설정
         }
 
@@ -154,10 +154,10 @@ namespace Memory_Policy_Simulator
             {
                 case "FIFO":
                     return 'F';
-                case "LRU":
-                    return 'L';
                 case "Clock":
                     return 'C';
+                case "LFU":
+                    return 'L';
                 default:
                     return 'F';
             }
