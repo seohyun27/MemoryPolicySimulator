@@ -1,8 +1,5 @@
 ﻿namespace Memory_Policy_Simulator
 {
-    //UI 구성: 버튼, 텍스트박스, 차트, 레이블 등 UI 요소의 위치와 속성 설정.
-    //기능 연결: 버튼 클릭 이벤트, 키 이벤트 등 UI와 로직 연결을 위한 초기화 코드 포함.
-    
     partial class Form1
     {
         /// <summary>

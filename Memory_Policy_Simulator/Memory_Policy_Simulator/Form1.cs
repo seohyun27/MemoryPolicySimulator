@@ -10,9 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Memory_Policy_Simulator
-{
-    //UI 이벤트 처리: 버튼 클릭, 텍스트 입력, 차트 업데이트 등 사용자 인터랙션 처리.
-    //페이지 교체 시뮬레이션 실행: 입력된 문자열과 윈도우 크기를 바탕으로 Core 객체를 생성하고, 페이지 요청을 시뮬레이션.
+{ //UI 이벤트 처리: 버튼 클릭, 텍스트 입력, 차트 업데이트 등 사용자 인터랙션 처리. //페이지 교체 시뮬레이션 실행: 입력된 문자열과 윈도우 크기를 바탕으로 Core 객체를 생성하고, 페이지 요청을 시뮬레이션.
 
     public partial class Form1 : Form
     {
@@ -36,8 +34,8 @@ namespace Memory_Policy_Simulator
             this.comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboBox1.Items.Clear(); // 기존 항목 초기화
             this.comboBox1.Items.Add("FIFO");
-            this.comboBox1.Items.Add("Clock");
             this.comboBox1.Items.Add("LFU");
+            this.comboBox1.Items.Add("MFU");
             this.comboBox1.SelectedIndex = 0; // 기본값 설정
         }
 
@@ -48,13 +46,13 @@ namespace Memory_Policy_Simulator
 
             g.Clear(Color.Black);
 
-            for ( int i = 0; i < dataLength; i++ ) // length
+            for (int i = 0; i < dataLength; i++) // length
             {
                 int psudoCursor = core.pageHistory[i].loc;
                 char data = core.pageHistory[i].data;
                 Page.STATUS status = core.pageHistory[i].status;
 
-                switch ( status )
+                switch (status)
                 {
                     case Page.STATUS.PAGEFAULT:
                         psudoQueue.Enqueue(data);
@@ -65,7 +63,7 @@ namespace Memory_Policy_Simulator
                         break;
                 }
 
-                for ( int j = 0; j <= windowSize; j++) // height - STEP
+                for (int j = 0; j <= windowSize; j++) // height - STEP
                 {
                     if (j == 0)
                     {
@@ -80,7 +78,7 @@ namespace Memory_Policy_Simulator
                 DrawGridHighlight(i, psudoCursor, status);
                 int depth = 1;
 
-                foreach ( char t in psudoQueue )
+                foreach (char t in psudoQueue)
                 {
                     DrawGridText(i, depth++, t);
                 }
@@ -141,9 +139,9 @@ namespace Memory_Policy_Simulator
             int gridBaseY = y * gridSize;
 
             g.DrawString(
-                value.ToString(), 
-                new Font(FontFamily.GenericMonospace, 8), 
-                new SolidBrush(Color.White), 
+                value.ToString(),
+                new Font(FontFamily.GenericMonospace, 8),
+                new SolidBrush(Color.White),
                 new PointF(
                     gridBaseX + (x * gridSpace) + gridSize / 3,
                     gridBaseY + gridSize / 4));
@@ -155,10 +153,10 @@ namespace Memory_Policy_Simulator
             {
                 case "FIFO":
                     return 'F';
-                case "Clock":
-                    return 'C';
                 case "LFU":
                     return 'L';
+                case "MFU":
+                    return 'M';
                 default:
                     return 'F';
             }
@@ -177,10 +175,10 @@ namespace Memory_Policy_Simulator
                 char memoryPolicy = GetPolicy();
                 var window = new Core(windowSize, memoryPolicy);
 
-                foreach ( char element in data )
+                foreach (char element in data)
                 {
                     var status = window.Operate(element);
-                    this.tbConsole.Text += "DATA " + element + " is " + 
+                    this.tbConsole.Text += "DATA " + element + " is " +
                         ((status == Page.STATUS.PAGEFAULT) ? "Page Fault" : status == Page.STATUS.MIGRATION ? "Migrated" : "Hit")
                         + "\r\n";
                 }
@@ -225,10 +223,10 @@ namespace Memory_Policy_Simulator
 
         private void tbWindowSize_KeyPress(object sender, KeyPressEventArgs e)
         {
-                if (!(Char.IsDigit(e.KeyChar)) && e.KeyChar != 8)
-                {
-                    e.Handled = true;
-                }
+            if (!(Char.IsDigit(e.KeyChar)) && e.KeyChar != 8)
+            {
+                e.Handled = true;
+            }
         }
 
         private void btnRand_Click(object sender, EventArgs e)
@@ -239,7 +237,7 @@ namespace Memory_Policy_Simulator
             StringBuilder sb = new StringBuilder();
 
 
-            for ( int i = 0; i < count; i++ )
+            for (int i = 0; i < count; i++)
             {
                 sb.Append((char)rd.Next(65, 90));
             }
