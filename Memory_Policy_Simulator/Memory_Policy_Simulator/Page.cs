@@ -25,7 +25,7 @@ namespace Memory_Policy_Simulator
         public int loc; //메모리 내부에서의 페이지 위치
         public char data; //페이지에 저장된 데이터
         public STATUS status; //페이지의 현재 상태
-        public int ReferBit; //페이지의 참조 비트(Clock 알고리즘에서 사용)
+        public bool ReferBit; //페이지의 참조 비트(Clock 알고리즘에서 사용)
         public int ReferFrequency; //페이지의 참조 횟수(LFU 알고리즘에서 사용)
     }
 
