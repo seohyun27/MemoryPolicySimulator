@@ -11,7 +11,7 @@ public class Page {
     public int loc;
     public char data;
     public STATUS status;
-    public int Count; // 참조 횟수를 세기 위한 변수
+    public int count; // 참조 횟수를 세기 위한 변수
 
     // 기본 생성자
     public Page() {
@@ -19,6 +19,6 @@ public class Page {
         this.loc = 0;
         this.data = '\0'; // 초기값
         this.status = STATUS.PAGEFAULT; // 기본값 설정
-        this.Count = 0;
+        this.count = 0;
     }
 }

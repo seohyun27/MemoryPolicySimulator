@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Core {
     private int cursor;
@@ -8,6 +9,8 @@ public class Core {
     public List<Page> pageHistory;
     public List<String> History;
     private char memoryPolicy; // 정책
+    private static final int MAX_COUNT = 10;
+    private static final double PFU_PROBABILITY = 0.5;
 
     public int hit;
     public int fault;
@@ -45,53 +48,68 @@ public class Core {
             }
             newPage.loc = i + 1;
 
-            if (frame_window.get(i).Count <= 10) {
-                frame_window.get(i).Count++;
+            if (frame_window.get(i).count <= MAX_COUNT) {
+                frame_window.get(i).count++;
             }
-            newPage.Count = frame_window.get(i).Count;
+            newPage.count = frame_window.get(i).count;
         } else {
             // 교체 또는 fault
             newPage.pid = Page.CREATE_ID++;
             newPage.data = data;
-            newPage.Count = 0; // 새 페이지는 카운트 0으로 초기화
+            newPage.count = 0; // 새 페이지는 카운트 0으로 초기화
 
             if (frame_window.size() >= p_frame_size) {
-                System.out.println("start replacement");
                 newPage.status = Page.STATUS.MIGRATION;
 
-                if (this.memoryPolicy == 'F') {
-                    // FIFO 정책
+                if (this.memoryPolicy == 'F') { // FIFO 정책
                     frame_window.remove(0);
-                    System.out.println("start FIFO");
                     newPage.loc = cursor;
-                    frame_window.add(newPage);
-                } else if (this.memoryPolicy == 'L') {
-                    // LFU 정책
-                    System.out.println("start LFU");
+                } else if (this.memoryPolicy == 'L') { // LFU 정책
                     int minIndex = 0;
                     for (int i = 1; i < frame_window.size(); i++) {
-                        if (frame_window.get(i).Count < frame_window.get(minIndex).Count) {
+                        if (frame_window.get(i).count < frame_window.get(minIndex).count) {
                             minIndex = i;
                         }
                     }
                     frame_window.remove(minIndex);
                     newPage.loc = minIndex + 1;
-                    frame_window.add(newPage);
-                } else if (this.memoryPolicy == 'M') {
-                    // LFU 정책
-                    System.out.println("start MFU");
+                } else if (this.memoryPolicy == 'M') { // LFU 정책
                     int maxIndex = 0;
                     for (int i = 1; i < frame_window.size(); i++) {
-                        if (frame_window.get(i).Count > frame_window.get(maxIndex).Count) {
+                        if (frame_window.get(i).count > frame_window.get(maxIndex).count) {
                             maxIndex = i;
                         }
                     }
                     frame_window.remove(maxIndex);
                     newPage.loc = maxIndex + 1;
-                    frame_window.add(newPage);
+                }  else if (this.memoryPolicy == 'P') {
+                    int minIndex = 0;
+                    int maxIndex = 0;
+                    for (int i = 1; i < frame_window.size(); i++) {
+                        if (frame_window.get(i).count < frame_window.get(minIndex).count) {
+                            minIndex = i;
+                        }
+                        if (frame_window.get(i).count > frame_window.get(maxIndex).count) {
+                            maxIndex = i;
+                        }
+                    }
+
+                    // 랜덤 선택
+                    Random rand = new Random();
+                    double randProb = rand.nextDouble(); // 0.0 ~ 1.0 사이의 난수 생성
+                    int chooseIndex;
+                    if (randProb < PFU_PROBABILITY) {
+                        chooseIndex = minIndex;
+                    } else {
+                        chooseIndex = maxIndex;
+                    }
+
+                    frame_window.remove(chooseIndex);
+                    newPage.loc = chooseIndex + 1;
                 }
 
                 cursor = p_frame_size;
+                frame_window.add(newPage);
                 this.migration++;
                 this.fault++;
             } else {
@@ -130,9 +148,7 @@ public class Core {
         }
 
         sb.append(status);
-
         String result = sb.toString(); // 최종 문자열
-
         History.add(result);
 
         return newPage.status;

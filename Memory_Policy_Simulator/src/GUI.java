@@ -28,7 +28,7 @@ public class GUI extends JFrame {
 
         inputField = new JTextField(15);
         frameSizeField = new JTextField("4", 3); // 기본값 4
-        policyComboBox = new JComboBox<>(new String[]{"FIFO", "LFU", "MFU", "My"});
+        policyComboBox = new JComboBox<>(new String[]{"FIFO", "LFU", "MFU", "PFU"});
         runButton = new JButton("Run");
         randomButton = new JButton("Random");
 
@@ -103,8 +103,8 @@ public class GUI extends JFrame {
             policyChar = 'L';
         } else if (policyStr.equals("MFU")) {
             policyChar = 'M';
-        } else if (policyStr.equals("My")) { //내 정책
-            policyChar = 'I';
+        } else if (policyStr.equals("PFU")) { //내 정책
+            policyChar = 'P';
         }
 
         core = new Core(frameSize, policyChar);
