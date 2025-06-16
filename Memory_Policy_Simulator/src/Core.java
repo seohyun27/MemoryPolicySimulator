@@ -9,8 +9,8 @@ public class Core {
     public List<Page> pageHistory;
     public List<String> History;
     private char memoryPolicy; // 정책
-    private static final int MAX_COUNT = 10;
-    private static final double PFU_PROBABILITY = 0.5;
+    private static final int MAX_COUNT = 10; // 한 페이지의 최대 참조 횟수
+    private static final double PFU_PROBABILITY = 0.5; // PFU의 인덱스 선택 확률
 
     public int hit;
     public int fault;
@@ -20,9 +20,9 @@ public class Core {
         this.cursor = 0;
         this.p_frame_size = get_frame_size;
         this.frame_window = new ArrayList<>();
-        this.pageHistory = new ArrayList<>();
-        this.History = new ArrayList<>();
-        this.memoryPolicy = memoryPolicy;
+        this.pageHistory = new ArrayList<>(); // 입력된 페이지를 순서대로 저장하기 위한 배열
+        this.History = new ArrayList<>(); // 현재 상태를 백업해 문자열로 저장
+        this.memoryPolicy = memoryPolicy; // 정책 선택
         this.hit = 0;
         this.fault = 0;
         this.migration = 0;
@@ -36,7 +36,7 @@ public class Core {
 
         boolean hitPage = frame_window.stream().anyMatch(x -> x.data == data);
         if (hitPage) {
-            // 히트
+            // 페이지 히트
             newPage.pid = Page.CREATE_ID++;
             newPage.data = data;
             newPage.status = Page.STATUS.HIT;
@@ -56,9 +56,10 @@ public class Core {
             // 교체 또는 fault
             newPage.pid = Page.CREATE_ID++;
             newPage.data = data;
-            newPage.count = 0; // 새 페이지는 카운트 0으로 초기화
+            newPage.count = 0; // 새 페이지는 참조 횟수를 0으로 초기화
 
             if (frame_window.size() >= p_frame_size) {
+                // 페이지 교체
                 newPage.status = Page.STATUS.MIGRATION;
 
                 if (this.memoryPolicy == 'F') { // FIFO 정책
@@ -82,7 +83,7 @@ public class Core {
                     }
                     frame_window.remove(maxIndex);
                     newPage.loc = maxIndex + 1;
-                }  else if (this.memoryPolicy == 'P') {
+                }  else if (this.memoryPolicy == 'P') { // PFU 정책
                     int minIndex = 0;
                     int maxIndex = 0;
                     for (int i = 1; i < frame_window.size(); i++) {
@@ -94,9 +95,9 @@ public class Core {
                         }
                     }
 
-                    // 랜덤 선택
+                    // minIndex, maxIndex 중 하나를 랜덤 선택
                     Random rand = new Random();
-                    double randProb = rand.nextDouble(); // 0.0 ~ 1.0 사이의 난수 생성
+                    double randProb = rand.nextDouble();
                     int chooseIndex;
                     if (randProb < PFU_PROBABILITY) {
                         chooseIndex = minIndex;
@@ -113,7 +114,7 @@ public class Core {
                 this.migration++;
                 this.fault++;
             } else {
-                // 프레임이 꽉 차지 않은 경우
+                // 페이지 fault
                 newPage.status = Page.STATUS.PAGEFAULT;
                 cursor++;
                 this.fault++;
@@ -122,13 +123,13 @@ public class Core {
             }
         }
 
-        // 페이지 히스토리 기록
+        // pageHistory 기록
         pageHistory.add(newPage);
 
+        // History 기록
         sb.append(newPage.data + "       :    ");
 
-        // 프레임 윈도우 상태 백업
-        for (Page page : frame_window) {
+        for (Page page : frame_window) { // 프레임 윈도우 상태 백업
             sb.append(page.data + " ");
         }
 
@@ -148,13 +149,13 @@ public class Core {
         }
 
         sb.append(status);
-        String result = sb.toString(); // 최종 문자열
+        String result = sb.toString();
         History.add(result);
 
         return newPage.status;
     }
 
-    public List<String> getInfo() {
+    public List<String> getInfo() { // 통계 정보 리턴
         List<String> info = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
@@ -162,7 +163,7 @@ public class Core {
         sb.append(this.hit);
         String result = sb.toString();
         info.add(result);
-        sb.setLength(0); // sb를 비우기
+        sb.setLength(0);
 
         sb.append("Migration 횟수 : ");
         sb.append(this.migration);
@@ -178,6 +179,7 @@ public class Core {
 
         info.add("");
 
+        // fault_rate 계산
         double fault_rate = (double) this.fault / (this.fault + this.hit) * 100;
         fault_rate = Math.round(fault_rate * 100.0) / 100.0;
         sb.append("fault rate : ");
@@ -187,24 +189,5 @@ public class Core {
         info.add(result);
 
         return info;
-    }
-
-    public static void main(String[] args) {
-        Core core = new Core(4, 'F');
-
-        String string = "1112345161";
-        for (int i = 0; i < string.length(); i++) {
-            char ch = string.charAt(i);
-            core.operate(ch);
-        }
-
-        for (String line : core.History) {
-            System.out.println(line);
-        }
-
-        List<String> info = core.getInfo();
-        for (String line : info) {
-            System.out.println(line);
-        }
     }
 }

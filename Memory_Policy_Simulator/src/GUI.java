@@ -14,7 +14,7 @@ public class GUI extends JFrame {
     private JButton randomButton;
 
     public GUI() {
-        // Core 인스턴스 생성 (초기값은 필요 없지만, 기본값으로 4)
+        // Core 인스턴스 생성 (기본 frame 4, 기본 policy FIFO)
         core = new Core(4, 'F');
 
         setTitle("Memory Policy Simulator");
@@ -27,7 +27,7 @@ public class GUI extends JFrame {
         topPanel.setLayout(new FlowLayout());
 
         inputField = new JTextField(15);
-        frameSizeField = new JTextField("4", 3); // 기본값 4
+        frameSizeField = new JTextField("4", 3);
         policyComboBox = new JComboBox<>(new String[]{"FIFO", "LFU", "MFU", "PFU"});
         runButton = new JButton("Run");
         randomButton = new JButton("Random");
@@ -53,7 +53,6 @@ public class GUI extends JFrame {
         infoArea.setBorder(BorderFactory.createTitledBorder("Statistics"));
         JScrollPane infoScroll = new JScrollPane(infoArea);
 
-        // 텍스트 폰트 설정
         Font font = new Font("Serif", Font.PLAIN, 16);
         historyArea.setFont(font);
         infoArea.setFont(font);
@@ -61,7 +60,6 @@ public class GUI extends JFrame {
         splitPane.setLeftComponent(historyScroll);
         splitPane.setRightComponent(infoScroll);
 
-        // 중앙 영역의 비율 조절
         splitPane.setDividerLocation(0.6);
         splitPane.setResizeWeight(0.6);
 
@@ -75,11 +73,11 @@ public class GUI extends JFrame {
         randomButton.addActionListener(e -> generateRandomString());
     }
 
-    private void runSimulation() {
+    private void runSimulation() { // 페이지 시뮬레이터를 실행하는 함수
         String inputStr = inputField.getText().trim();
         String frameSizeText = frameSizeField.getText().trim();
 
-        // 프레임 크기 유효성 체크
+        // 프레임 크기 유효성 체크, 유효하지 않다면 그대로 리턴
         int frameSize;
         try {
             frameSize = Integer.parseInt(frameSizeText);
@@ -134,7 +132,7 @@ public class GUI extends JFrame {
     private void generateRandomString() { //랜덤 스트링을 만드는 함수
         StringBuilder sb = new StringBuilder();
         Random rand = new Random();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             char c = (char) ('A' + rand.nextInt(26));
             sb.append(c);
         }
