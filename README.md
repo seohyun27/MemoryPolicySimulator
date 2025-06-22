@@ -1,5 +1,5 @@
 # MemoryPolicySimulator
-This repository contains the source code and report for our Operating Systems term project. It implements various Page Replacement Policies and explores **the relationship between program locality and the efficiency of Page Replacement Policies**. Based on the analysis of existing policies, the project also proposes a new policy that addresses their limitations.
+This repository contains the source code and report for our Operating Systems term project(3-1). It implements various Page Replacement Policies and explores **the relationship between program locality and the efficiency of Page Replacement Policies**. Based on the analysis of existing policies, the project also proposes a new policy that addresses their limitations.
 
 ## contents
 #### Report
